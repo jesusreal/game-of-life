@@ -3,6 +3,14 @@
   max-width: 720px;
   text-align: center;
   width: 100%;
+  box-sizing: border-box;
+}
+
+.header {
+  font-size: 1.5em;
+  color: #378573;
+  margin: 1em 0.5em 0;
+  font-weight: bold;
 }
 
 .block {
@@ -25,4 +33,39 @@ button:focus {
   border: none;
   cursor: none;
 }
+
+#world {
+  margin: 20px auto;
+  font-size: 0em;
+  width: 90%;
+  height: 620px;
+  font-size: 0px;
+  background-color: #DDD;
+}
+
+.aliveCell, .deadCell {
+  display: inline-block;
+  vertical-align: top;
+  margin: 0;
+  padding: 0;
+  font-size: 0em;
+  width: 9.68%;
+  height: 60px;
+  border: 1px solid black;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.aliveCell {
+  background-color: #666;
+}
+
+button {
+  display: inline-block;
+  margin: 0 20px;
+}
+
+button[disabled] {
+  background-color: #AAA;
+}
+
 

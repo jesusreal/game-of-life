@@ -1,4 +1,3 @@
-// import express from 'express';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import 'babel-polyfill';
@@ -10,22 +9,75 @@ class Cell {
   }
 }
 
-
 export default class Page extends React.Component {
   constructor() {
     super();
     this.grid = [
-      new Cell(1, 1)
+      new Cell(2, 6),
+      new Cell(3, 6),
+      new Cell(4, 6),
+      new Cell(5, 6),
+      new Cell(6, 6),
+      new Cell(7, 6),
+      new Cell(7, 5),
+      new Cell(7, 4),
+      new Cell(7, 3),
+      new Cell(6, 3),
+      new Cell(5, 3)
     ];
-
+    this.initialGrid = this.grid;
     this.cells = [];
+    this.state = {
+      graphicalWorld: Page.createGraphicalWorld(this.initialGrid),
+      running: false
+    }
+    this.intervalId = null
+
+    this.RunGame.bind(this);
   }
 
-  getNextGen() {
-    let stayAlive = Page.getNextGenStillAliveCells();
-    let becomeAlive = Page.getNextGenBecomeAliveCells();
-    var nextGen = stayAlive.concat(becomeAlive);
-    console.log('nextGen ' , nextGen);
+  static createGraphicalWorld(grid) {
+    var dim = {
+      rows: 10,
+      cols: 10
+    };
+    var graphicalWorld = new Array(dim.cols);
+    for (let i=0; i<dim.rows; i++) {
+      graphicalWorld[i] = new Array(dim.cols);
+      for (var j=0; j<dim.cols; j++) {
+        const cell = new Cell(i, j);
+        graphicalWorld[i][j] = Boolean(Page.isCellInCellsList(cell, grid));
+      }
+    }
+    return graphicalWorld;
+  }
+
+  resetWorld() {
+    this.setState({running: false});
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+      this.intervalId = null
+    }
+    this.grid = this.initialGrid;
+    var graphicalWorld = Page.createGraphicalWorld(this.grid);
+    this.setState({graphicalWorld: graphicalWorld})
+  }
+
+  RunGame(event) {
+    this.setState({running: true});
+    this.intervalId = setInterval(() => {
+      let stayAlive = Page.getNextGenStillAliveCells(this.grid);
+      let becomeAlive = Page.getNextGenBecomeAliveCells(this.grid);
+      var nextGen = stayAlive.concat(becomeAlive);
+      if (!nextGen.length) {
+        alert("All cells died! :(")
+        clearInterval(this.intervalId);
+        this.intervalId = null;
+      }
+      var graphicalWorld = Page.createGraphicalWorld(this.grid);
+      this.grid = nextGen;
+      this.setState({graphicalWorld: graphicalWorld})
+    }, 500);
   }
 
   static getNextGenStillAliveCells (grid) {
@@ -36,12 +88,10 @@ export default class Page extends React.Component {
 
 
   static isCellInCellsList (cellToCheck, cellsList) {
-    console.log(new Cell(1,1) == new Cell(1,1))
-    console.log(new Cell(1,1) === new Cell(1,1))
-    console.log(Object.is(new Cell(1,1), new Cell(1,1)))
-    return cellsList.find((cell) =>
+    var cellInCellList = cellsList.find((cell) =>
       cell.posx === cellToCheck.posx && cell.posy === cellToCheck.posy
-    )
+    );
+    return Boolean(cellInCellList);
   }
 
   static getNextGenBecomeAliveCells (grid) {
@@ -81,21 +131,29 @@ export default class Page extends React.Component {
   render() {
     return (
       <div>
-        <div id="words-groups" className="block">
-          {this.cells.map((cell) => {
-            return (<li ngClass={cell.state ? 'aliveCell' : 'deadCell'}></li>);
+        <h3 className="header">Game of Life</h3>
+        <div id="world">
+          {this.state.graphicalWorld.map((row) => {
+            return row.map((cell) => {
+              return (<div className={cell ? 'aliveCell' : 'deadCell'}></div>);
+            })
           })}
         </div>
-        <NewWordComponent/>
+        <button
+          disabled={this.state.running}
+          onClick={this.RunGame.bind(this)}>Start game</button>
+        <button
+          disabled={!this.state.running}
+          onClick={this.resetWorld.bind(this)}>Reset</button>
       </div>
     );
   }
 }
 
-// setTimeout(function() {
+setTimeout(function() {
   // console.log(ReactDOMServer.renderToString(<Page/>)); // for server-side rendering
-// ReactDOM.render(<Page/>, document.getElementById('app'));
-// }, 80);
+ReactDOM.render(<Page/>, document.getElementById('app'));
+}, 80);
 
 // var ComponentFactory = React.createFactory(Page);
 // console.log('ComponentFactory ' , ComponentFactory());

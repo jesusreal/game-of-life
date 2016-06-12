@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "env": "env",
-    "test": "npm run lint; mocha src --recursive --compilers js:babel-register",
+    "test": "mocha src --recursive --compilers js:babel-register",
     "test:watch": "npm test -- -w",
     "dev": "lite-server",
     "lint": "eslint src",

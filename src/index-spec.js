@@ -26,7 +26,7 @@ describe('getTotalAliveNeighbours(), ', () => {
     // let PageComp = new Page();
     // PageComp.grid = grid;
     const result = Page.getTotalAliveNeighbours(grid, cellToCheck);
-    assert.equal(result, 2);
+    assert.strictEqual(result, 2);
   });
 });
 
@@ -44,7 +44,7 @@ describe('getNextGenStillAliveCells(), ', function() {
       new Cell(1, 2)
     ];
     const result = Page.getNextGenStillAliveCells(grid);
-    assert.deepEqual(result, expectedCellsStillAlive);
+    assert.deepStrictEqual(result, expectedCellsStillAlive);
   });
 });
 
@@ -64,5 +64,24 @@ describe('getNextGenBecomeAliveCells(), ', function() {
     ];
     const result = Page.getNextGenBecomeAliveCells(grid);
     assert.deepEqual(result, expectedCellsBecomeAlive);
+  });
+});
+
+describe('createGraphicalWorld()', function() {
+  it('creates correct graphical world', () => {
+    const grid = [
+      new Cell(0, 0),
+      new Cell(1, 1),
+      new Cell(1, 2),
+      new Cell(1, 3),
+      new Cell(5, 5),
+    ];
+    const expectedGraphicalWorld = [
+      [true, false, false],
+      [false, true, true],
+      [false, false, false]
+    ];
+    const result = Page.createGraphicalWorld(grid);
+    assert.deepStrictEqual(result, expectedGraphicalWorld);
   });
 });
