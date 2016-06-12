@@ -1,0 +1,28 @@
+ body {
+  margin: 0 auto;
+  max-width: 720px;
+  text-align: center;
+  width: 100%;
+}
+
+.block {
+  margin: 2em auto;
+}
+
+
+button {
+  display: block;
+  width: 10em;
+  margin: 1em auto;
+  padding: 1em 2em;
+  background: #378573;
+  color: white;
+  border-radius: 5px;
+  border: none;
+}
+
+button:focus {
+  border: none;
+  cursor: none;
+}
+
